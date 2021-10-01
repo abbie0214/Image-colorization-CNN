@@ -17,7 +17,7 @@ from colorization import process, get_batch, MyConv2d
 
 class RegressionCNN(nn.Module):
     def __init__(self, kernel, num_filters):
-        # first call parent's initialization function
+ 
         super(RegressionCNN, self).__init__()
         padding = kernel // 2
 
@@ -65,17 +65,7 @@ class RegressionCNN(nn.Module):
 
 
 def get_torch_vars(xs, ys, gpu=False):
-    """
-    Helper function to convert numpy arrays to pytorch tensors.
-    If GPU is used, move the tensors to GPU.
-
-    Args:
-      xs (float numpy tensor): gray scale input
-      ys (float numpy tensor): color output
-      gpu (bool): whether to move pytorch tensor to GPU
-    Returns:
-      xs, ys
-    """
+ 
     xs = torch.from_numpy(xs).float()
     ys = torch.from_numpy(ys).float()
     if gpu:
@@ -85,10 +75,7 @@ def get_torch_vars(xs, ys, gpu=False):
 
 
 def train(cnn, epochs=80, learn_rate=0.001, batch_size=100, gpu=True):
-    """
-    Train a regression CNN. Note that you do not need this function.
-    Included for reference.
-    """
+ 
     if gpu:
         cnn.cuda()
 
@@ -121,7 +108,7 @@ def train(cnn, epochs=80, learn_rate=0.001, batch_size=100, gpu=True):
         print('Epoch [%d/%d], Loss: %.4f' % (epoch + 1, epochs, loss.data[0]))
 
         # Evaluate the model
-        cnn.eval()  # Change model to 'eval' mode (BN uses moving mean/var).
+        cnn.eval()  
         losses = []
         for i, (xs, ys) in enumerate(get_batch(test_grey,
                                                test_rgb,
@@ -141,15 +128,7 @@ def train(cnn, epochs=80, learn_rate=0.001, batch_size=100, gpu=True):
 
 
 def plot(gray, gtcolor, predcolor, path):
-    """
-    Plot input, gt output and predicted output as an image.
-
-    Args:
-      gray: numpy tensor of shape Nx1xHxW
-      gtcolor: numpy tensor of shape Nx3xHxW
-      predcolor: numpy tensor of shape Nx3xHxW
-      path: path to save the image
-    """
+ 
     gray = np.transpose(gray, [0, 2, 3, 1])
     gtcolor = np.transpose(gtcolor, [0, 2, 3, 1])
     predcolor = np.transpose(predcolor, [0, 2, 3, 1])
@@ -180,10 +159,7 @@ if __name__ == '__main__':
 
     cnn = RegressionCNN(args.kernel, args.num_filters)
 
-    # Uncomment to train. You do not need this for the assignment.
-    # Included for completeness
-    #train(cnn); exit(0)
-
+ 
     print("Loading weights...")
     checkpoint = torch.load('weights/regression_cnn_k%d_f%d.pkl' % (args.kernel, args.num_filters), map_location=lambda storage, loc: storage)
     cnn.load_state_dict(checkpoint)
